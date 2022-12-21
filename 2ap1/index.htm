@@ -1,0 +1,1385 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<meta name='generator' content='ExamView HTML Generator 1.1.0'>
+	<meta name='robots' content='noindex,nofollow'>
+	<title>Review Questions</title>
+	<style type='text/css'>
+		.spacer { line-height:.7em; }
+		.title { font-size:13pt; font-weight:bold; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		.qnumber { font-size:12pt; font-family:"Times New Roman", "Times", serif; color:#000000; text-align:right; }
+		.choice { font-size:12pt; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		.default { font-size:12pt; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		.qinfo { font-size:12pt; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		.points { font-size:8pt; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		TD.pad { padding: 0pt 4pt 0pt 4pt; }
+		.font1 { font-family:"Times New Roman", "Times", serif; }
+		.font2 { font-family:"Times New Roman", "Times", serif; }
+		.font3 { font-family:"Times New Roman", "Times", serif; }
+	</style>
+<script type='text/javascript' language='JavaScript1.1'>
+<!--
+	// Copyright (c) 2000-2008 eInstruction Corp.
+	var listMap = '111111111111111111111111111111';
+	var qtypeMap = '222222222222222222222222222222';
+	var ansMap = new Array(30);
+	var ptsMap = new Array(30);
+	ansMap[0] = '44';
+	ptsMap[0] = 1;
+	ansMap[1] = '40';
+	ptsMap[1] = 1;
+	ansMap[2] = '42';
+	ptsMap[2] = 1;
+	ansMap[3] = '45';
+	ptsMap[3] = 1;
+	ansMap[4] = '46';
+	ptsMap[4] = 1;
+	ansMap[5] = '45';
+	ptsMap[5] = 1;
+	ansMap[6] = '46';
+	ptsMap[6] = 1;
+	ansMap[7] = '49';
+	ptsMap[7] = 1;
+	ansMap[8] = '4a';
+	ptsMap[8] = 1;
+	ansMap[9] = '49';
+	ptsMap[9] = 1;
+	ansMap[10] = '4a';
+	ptsMap[10] = 1;
+	ansMap[11] = '48';
+	ptsMap[11] = 1;
+	ansMap[12] = '4c';
+	ptsMap[12] = 1;
+	ansMap[13] = '4f';
+	ptsMap[13] = 1;
+	ansMap[14] = '4d';
+	ptsMap[14] = 1;
+	ansMap[15] = '51';
+	ptsMap[15] = 1;
+	ansMap[16] = '55';
+	ptsMap[16] = 1;
+	ansMap[17] = '50';
+	ptsMap[17] = 1;
+	ansMap[18] = '56';
+	ptsMap[18] = 1;
+	ansMap[19] = '56';
+	ptsMap[19] = 1;
+	ansMap[20] = '56';
+	ptsMap[20] = 1;
+	ansMap[21] = '52';
+	ptsMap[21] = 1;
+	ansMap[22] = '56';
+	ptsMap[22] = 1;
+	ansMap[23] = '5c';
+	ptsMap[23] = 1;
+	ansMap[24] = '58';
+	ptsMap[24] = 1;
+	ansMap[25] = '5e';
+	ptsMap[25] = 1;
+	ansMap[26] = '58';
+	ptsMap[26] = 1;
+	ansMap[27] = '58';
+	ptsMap[27] = 1;
+	ansMap[28] = '5f';
+	ptsMap[28] = 1;
+	ansMap[29] = '5d';
+	ptsMap[29] = 1;
+	function HandleSubmit(f)
+	{
+		var	MAGIC = 840;
+		var	totalCorrect = 0;
+		var	totalPossible = 0;
+		var	numCorrect = 0;
+		var	numPossible = 0;
+		var	numBlank = 0;
+		var	index;
+		var	msg;
+		var	i;
+
+		f.student_name.value = StripSpaces(f.student_name.value);
+		f.student_id.value = StripSpaces(f.student_id.value);
+		f.student_email.value = StripSpaces(f.student_email.value);
+
+		FixMR(f);
+		FixMTF(f);
+		index = 0;
+		for (i=0; i < f.length; ++i) {
+			if (f.elements[i].name.indexOf(":") > 0) {
+				if (listMap.charAt(index) == "1") {
+					listIndex = f.elements[i].selectedIndex;
+					text = StripSpaces(f.elements[i].options[listIndex].value);
+				} else {
+					f.elements[i].value = StripSpaces(f.elements[i].value);
+					text = f.elements[i].value;
+				}
+
+				if (text.length == 0)
+					++numBlank;
+				++index;
+			}
+		}
+
+		if (f.student_name.value == "") {
+			alert("Student name cannot be blank.");
+			return(false);
+		}
+
+		if (numBlank > 0) {
+			if (numBlank == 1)
+				msg = "1 question";
+			else
+				msg = numBlank + " questions";
+			if (!confirm("You have not answered " + msg +
+				"  Are you sure you want to end the test?"))
+				return(false);
+		}
+
+		index = 0;
+		var scoreDetails = new Array();
+		for (i=0; i < f.length; ++i) {
+			if (f.elements[i].name.indexOf(":") > 0) {
+				if (listMap.charAt(index) == "1") {
+					listIndex = f.elements[i].selectedIndex;
+					text = f.elements[i].options[listIndex].value;
+				} else
+					text = f.elements[i].value;
+
+				numPossible = ptsMap[index] * MAGIC;
+				if (ansMap[index] == "")
+					scoreDetails[index] = "?--";
+				else {
+					var scoreResult = ScoreAnswer(index, text, numPossible);
+					numCorrect = scoreResult.numPoints;
+					scoreDetails[index] = (scoreResult.isCorrect) ? " " : "X";
+					scoreDetails[index] += (Math.round(numCorrect * 100 / MAGIC) / 100).toString();
+					totalCorrect += numCorrect;
+					totalPossible += numPossible;
+				}
+
+				scoreDetails[index] += "/" + (numPossible / MAGIC);
+				++index;
+			}
+		}
+
+		f.score_details.value = scoreDetails.join("|");
+		f.score_correct.value = Math.round(totalCorrect * 100 / MAGIC) / 100;
+		f.score_possible.value = Math.round(totalPossible * 100 / MAGIC) / 100;
+		if (totalPossible > 0)
+			f.score_percent.value = Math.round(100.0 * totalCorrect / totalPossible);
+		else
+			f.score_percent.value = 0;
+
+		return(true);
+	}
+
+	function TranslateAnswer(s, answerIndex)
+	{
+		var	value;
+		var	newString;
+		var	code;
+		var	i;
+
+		value = (answerIndex % 31) + 1;
+		newString = "";
+		for (i=0; i < s.length; i += 2) {
+			code = parseInt(s.substring(i, i + 2), 16);
+			newString += String.fromCharCode(code ^ value);
+		}
+
+		return(newString);
+	}
+
+	function ScoreAnswer(answerIndex, responseText, pointsPossible)
+	{
+		var answerText = TranslateAnswer(ansMap[answerIndex], answerIndex);
+		var qtype = qtypeMap.charAt(answerIndex);
+		var nrExactMatch = false;
+		var result = new Array();
+
+		result.numPoints = 0;
+		result.isCorrect = false;
+
+		if (qtype == "3" && answerText.substring(0, 2) == "p:") {
+			answerText = answerText.substr(2);
+			if (responseText.toUpperCase() == answerText.toUpperCase())
+				result.isCorrect = true;
+			else
+				result.numPoints = MultiResponseCompare(responseText, answerText, pointsPossible);
+		} else if (qtype == "6") {
+			if (answerText.substring(0, 2) == "==") {
+				answerText = answerText.substr(2);
+				nrExactMatch = true;
+			}
+			if (NumericCompare(responseText, answerText, nrExactMatch))
+				result.isCorrect = true;
+		} else if (qtype == "7") {
+			if (CompletionCompare(responseText, answerText))
+				result.isCorrect = true;
+		} else if (responseText.toUpperCase() == answerText.toUpperCase())
+			result.isCorrect = true;
+
+		if (result.isCorrect)
+			result.numPoints = pointsPossible;
+
+		return(result);
+	}
+
+	function StripSpaces(s)
+	{
+		var	len;
+		var	i;
+
+		len = s.length;
+		for (i=len - 1; i >= 0 && s.charAt(i) == " "; --i)
+			len = i;
+
+		if (len == 0)
+			s = "";
+		else if (len != s.length)
+			s = s.substring(0, len);
+
+		return(s);
+	}
+
+	function MultiResponseCompare(responseText, answerText, pointsPossible)
+	{
+	}
+
+	function NumericCompare(response, answer, exactMatch)
+	{
+	}
+
+
+	function CompletionCompare(responseText, answerText)
+	{
+		return(false);
+	}
+
+    function StripLeadingSpaces(s)
+	{
+		var	len;
+		var	i = 0;
+		var index = -1;
+
+		len = s.length;
+		while(i < len && s.charAt(i) == " ")
+		{
+			index = ++i;			
+	    }
+
+		if (len == 0)
+			s = "";
+		else if (index > -1)
+			s = s.substring(index, len);
+
+		return(s);
+	}
+	
+	function FixMTF(f)
+	{
+	}
+
+	function FixMR(f)
+	{
+	}
+
+	function AllowReset()
+	{
+		return(window.confirm("Do you want to clear all of your answers?"));
+	}
+
+	function Restart()
+	{
+		if (AllowReset()) {
+			document.TestForm.onreset = function() { };
+			document.TestForm.reset();
+			document.TestForm.onreset = function() { AllowReset(); };
+		}
+	}
+// -->
+</script>
+</head>
+<body onResize='if(document.layers && navigator.appVersion.indexOf("Win") < 0){history.go(0);}'
+bgcolor='#FFFFFF' style='background-image:url(exercise_files/header.gif); background-repeat:no-repeat'>
+<noscript>
+	<h3><font color='#FF0000'>Javascript not enabled</font></h3>
+</noscript>
+<script type='text/javascript' language='JavaScript'>
+<!--
+if (navigator.appName.indexOf("Netscape") >= 0) {
+	if (parseInt(navigator.appVersion.charAt(0)) < 4)
+		alert("This document requires Netscape Navigator version 4.0 or later.");
+} else if (navigator.appName.indexOf("Explorer") >= 0) {
+	if (parseInt(navigator.appVersion.charAt(0)) < 4)
+		alert("This document requires Internet Explorer version 4.0 or later.");
+}
+// -->
+</script>
+<form name='TestForm' action='http://score.examview.com/cgi-bin/results.cgi' method='POST'
+	onSubmit='return(HandleSubmit(this))' onReset='return(AllowReset())'>
+<input type='hidden' name='product_version' value='7.50.1051'>
+<input type='hidden' name='instructor_name' value='Philip'>
+<input type='hidden' name='instructor_formalname' value='Dr. Atitianti'>
+<input type='hidden' name='instructor_email' value='p.akrofi@outlook.com'>
+<input type='hidden' name='instructor_org' value='D'>
+<input type='hidden' name='instructor_city' value='d'>
+<input type='hidden' name='instructor_state' value='D'>
+<input type='hidden' name='test_name' value='Review Questions'>
+<input type='hidden' name='other_label' value='Other'>
+<input type='hidden' name='test_mixed_questions' value='0'>
+<input type='hidden' name='score_correct' value='0'>
+<input type='hidden' name='score_possible' value='0'>
+<input type='hidden' name='score_percent' value='0'>
+<input type='hidden' name='score_subjective' value='0'>
+<input type='hidden' name='score_details' value=''>
+<div class='spacer'>&nbsp;</div>
+<div class='default'>
+	<div style='margin-left:1em'>
+	<b>Name:</b>&nbsp;<input type='text' name='student_name' size='30'> &nbsp;&nbsp;
+	<b>ID:</b>&nbsp;<input type='text' name='student_id' size='12'><br>
+	<div class='spacer'>&nbsp;</div>
+	<b>Email:</b>&nbsp;<input type='text' name='student_email' size='45'><br><br>
+	</div>
+</div>
+<div class='title'>Review Questions</div>
+
+<table align='left' width='100%' border='0' cellpadding='0' cellspacing='0'>
+<tr valign='top'>
+	<td colspan='3'><br>
+<div class='default'><b>Multiple Choice</b><span style='font-size:10pt'><br></span><i>Identify the
+choice that best completes the statement or answers the question.</i></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><b>Sweden and Finland produce only two goods, herring and cell phones, and this
+table shows the maximum amount that each nation can produce of the two goods.<br></b><div
+style='font-size:2pt'></div><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-top:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'
+bgcolor='#ffffff'>&nbsp;</td><td class='pad' style=' border-top:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;' bgcolor='#ffffff'><div
+style='text-align:center'><b><i>Sweden</i></b></div></td><td class='pad' style=' border-top:0.8pt
+solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'
+bgcolor='#ffffff'><div style='text-align:center'><b><i>Finland</i></b></div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;' bgcolor='#ffffff'><b>Herring</b></td><td class='pad'
+style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;' bgcolor='#ffffff'><div
+style='text-align:center'><b>100,000</b></div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;' bgcolor='#ffffff'><div
+style='text-align:center'><b>50,000</b></div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;' bgcolor='#ffffff'><b>Cell phones</b></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;' bgcolor='#ffffff'><div
+style='text-align:center'><b>10,000</b></div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;' bgcolor='#ffffff'><div
+style='text-align:center'><b>10,000</b></div></td></tr><tr valign='top'><td colspan='3' class='pad'
+style=' border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;' bgcolor='#ffffff'><div style='text-align:center'><b>Table 4-3: Comparative Advantage
+I</b></div></td></tr><tr height='0' style='border:none'><td width='34%'></td><td width='33%'></td><td
+width='33%'></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:1' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;1.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(<b>Table 4-3: Comparative Advantage I)</b> Sweden has an absolute advantage in
+producing:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>cell phones only.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>a combination of cell phones and
+herring.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>both cell phones and herring.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>neither cell phones nor
+herring.</span></td></tr><tr valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>herring only.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:2' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;2.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>A price floor or a price ceiling is an example of:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>a quantity control.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>a price control.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span class='default'>market equilibrium
+price.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>a quota limit.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>an excise tax.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:3' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;3.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>People who are in the process of changing jobs are accounted for in the category
+of:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>frictional unemployment.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>involuntary unemployment.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span class='default'>structural
+unemployment.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>cyclical unemployment.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>underemployed.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:4' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;4.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>The slope of the planned aggregate spending line is determined by:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>the marginal propensity to consume.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>the level of unplanned investment
+spending.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>the level of planned investment spending.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>d.</div></td><td><span class='default'>the level of
+autonomous consumption.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>the market interest
+rate.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:5' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;5.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>The aggregate demand curve:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>slopes downward for the same reasons that an ordinary demand curve
+does.</span></td></tr><tr valign='baseline'><td><div class='choice'>b.</div></td><td><span
+class='default'>slopes downward in part because when the price level falls the real wealth of the
+public falls, and this induces people to change their consumption.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span class='default'>slopes downward in
+part because as the price level falls the ability of households and firms to borrow cheaply
+increases.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>slopes upward, unlike an ordinary demand curve.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>is vertical, unlike
+an ordinary demand cure.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:6' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;6.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>A decrease in aggregate demand is seen as a(n):</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>downward movement along the aggregate demand curve.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>b.</div></td><td><span class='default'>upward movement
+along the aggregate demand curve.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>c.</div></td><td><span class='default'>shift to the left in the aggregate demand
+curve.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>shift to the right in the aggregate demand curve.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>movement from a
+vertical to a horizontal aggregate demand curve.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><b>Figure 17-2: Shift of the Aggregate Demand Curve<br></b><br><img width='266'
+height='190' align='bottom' alt="nar002-1.jpg" src="exercise_files/nar002-1.jpg" border='0'></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:7' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;7.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>Use the &#8220;<b>Shift of the Aggregate Demand Curve&#8221; Figure 17-2</b>. A
+movement from point <i>B</i> on <i>AD</i><sub>1</sub> to point <i>E</i> on <i>AD</i><sub>2</sub>
+could have been the result of:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>an increase in consumer optimism.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>a decrease in consumer
+wealth.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>an increase in personal income taxes.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>the central bank reducing the quantity of
+money.</span></td></tr><tr valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>an increase in interest rates.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:8' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;8.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>Crowding out results in a(n):</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>decrease in private investment spending resulting from government deficit
+spending.</span></td></tr><tr valign='baseline'><td><div class='choice'>b.</div></td><td><span
+class='default'>increase in physical capital accumulation which leads to higher economic
+growth.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>increase in private investment spending resulting from government deficit
+spending.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>increase in consumption spending as a result of higher investment
+spending.</span></td></tr><tr valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>decrease in private investment spending due to a positive foreign capital
+inflow.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:9' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;9.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>The government deficit:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>is the essentially the same as the government debt.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>b.</div></td><td><span class='default'>is much higher than
+the government debt.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>c.</div></td><td><span class='default'>measures the difference between the amount
+which government spends and the amount it collects in tax revenues in a given period of
+time.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>is the total amount of money a government owes at a particular point in
+time.</span></td></tr><tr valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>is the total amount of money a government owes to other
+nations.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:10' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;10.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>During an expansion, economists generally believe that an economy should:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>balance its budget.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>run a budget deficit.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span class='default'>run a budget
+surplus.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>be able to pay off all of its debt.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>see rising levels of
+unemployment.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><b>Figure 31-1: Money Market I</b><br><br><img width='424' height='232'
+align='bottom' alt="nar003-1.jpg" src="exercise_files/nar003-1.jpg" border='0'></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:11' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;11.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>Use the &#8220;<b>Money Market I&#8221; Figure 31-1</b>. If the money market is
+initially in equilibrium at point <i>E</i> and the central bank _____ bonds, then the interest rate
+will:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>sells; move toward point <i>H</i>.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>sells; move toward point
+<i>L</i>.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>buys; remain at point <i>E</i>.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>sells; remain at point
+<i>E</i>.</span></td></tr><tr valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>buys; move toward point <i>H</i>.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:12' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;12.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'><i>The General Theory of Employment, Interest, and Money</i> was written
+by:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>Adam Smith.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>Paul Samuelson.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span class='default'>Joseph
+Schumpeter.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>John Maynard Keynes.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>Karl Marx</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:13' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;13.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>According to Keynes, changes in &#8220;animal spirits&#8221; will affect actual
+output through changes in:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>business investment.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>government expenditure and
+taxes.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>money supply and interest rates.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>labor productivity and technological
+progress.</span></td></tr><tr valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>government expenditure and net exports</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:14' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;14.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>A more modern perspective on total factor productivity argues that:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>downturns in the business cycle decrease productivity.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>b.</div></td><td><span class='default'>upswings in the
+business cycle lead to decreases in productivity.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>c.</div></td><td><span class='default'>business cycles are irrelevant to
+productivity.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>rational expectations lead to swings in productivity.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>during recessions
+productivity actually increases.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:15' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;15.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>The following recommendation is consistent with which view of the macroeconomy?
+&#8220;A decrease in the money supply will reduce inflationary pressure.&#8221;</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>classical</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>Keynesian</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>monetarist</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>rational expectations</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>real business
+cycle</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:16' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;16.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>Productivity is equal to:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>real GDP divided by number of workers.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>real GDP divided by number of capital
+inputs.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>number of workers per machine.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>total output produced.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>real GDP divided by
+the unemployment rate.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:17' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;17.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>This question refers to the accounting for U.S. international transactions.
+Suppose that a financial investor from Los Angeles purchases bonds issued by the government of Peru.
+Which of the following best indicates the account in which this transaction would appear and how it
+would appear in that account?</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>current account; payments from foreigners</span></td></tr><tr
+valign='baseline'><td><div class='choice'>b.</div></td><td><span class='default'>current account;
+payments to foreigners</span></td></tr><tr valign='baseline'><td><div
+class='choice'>c.</div></td><td><span class='default'>financial account; payments from
+foreigners</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>financial account; payments to foreigners</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>current account;
+payment from foreign governments</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><b>Figure 49-16: Wireless Mouse Market<br></b><br><img width='232' height='219'
+align='bottom' alt="nar004-1.jpg" src="exercise_files/nar004-1.jpg" border='0'></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:18' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;18.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Figure 49-16: Wireless Mouse Market) Using the graph showing the wireless mouse
+market, calculate producer surplus when the market is in equilibrium.</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>$4,000</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>$1,300</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>$2,500</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>$3,000</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>$1,500</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:19' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;19.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>Producers in a particular market will bear the greater burden of an excise
+tax:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>if demand is perfectly inelastic and supply is price-elastic.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>b.</div></td><td><span class='default'>the less
+price-elastic demand is relative to supply.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>c.</div></td><td><span class='default'>if demand has the same price elasticity as
+supply.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>regardless of the price elasticity of demand or supply.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>the more
+price-elastic the demand is relative to supply.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><div style='font-size:2pt'></div><table cellpadding='0' cellspacing='0'
+width='37%' border='0'><tr valign='top'><td class='pad' style=' border-left:0.8pt solid #000000;
+border-top:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'><b>Labor<br>per Day</b></div></td><td class='pad' style='
+border-top:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'><b>Total Products<br>(units per
+period)</b></div></td></tr><tr valign='top'><td class='pad' style=' border-left:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>0</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>0</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>1</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>10</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>2</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>30</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>3</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>70</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>4</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>90</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>5</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>100</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>6</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>107</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>7</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>110</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>8</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>105</div></td></tr><tr
+valign='top'><td colspan='2' class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt
+solid #000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'><b>Table 54-2:
+Total Product and<br>Marginal Product</b></div></td></tr><tr height='0' style='border:none'><td
+width='41%'></td><td width='59%'></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:20' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;20.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Table 54-2: Total Product and Marginal Product) The average product of the
+fourth worker is ________ units.</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>20</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>22.5</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>50</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>90</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>25</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:21' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;21.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>In a perfectly competitive industry, the market demand curve is usually:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>perfectly inelastic.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>perfectly elastic.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>downward-sloping.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>vertical.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>relatively
+elastic.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:22' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;22.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>You own a lemonade stand in a very competitive lemonade market, and as such, you
+are a price-taking firm. Which of the following events would most likely increase your market
+power?</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>The government abolishes the system of patents and copyrights.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>b.</div></td><td><span class='default'>A booming economy
+increases the demand for lemonade and attracts entry into the market.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span class='default'>The average total
+cost curve for firms in the industry is horizontal.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>You own exclusive rights to harvest lemons from
+all domestic citrus orchards.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>The government subsidizes new lemonade
+entrepreneurs.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:23' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;23.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>If a perfectly competitive firm is producing a quantity that generates <i>P</i>
+= <i>MC,</i> then profit:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>is maximized.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>can be increased by decreasing the
+quantity.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>can be increased by decreasing the price.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>d.</div></td><td><span class='default'>can be increased by
+increasing production.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>is negative and less than total fixed
+cost.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:24' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;24.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>Which of the following is true?</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>Instead of applying the marginal decision rule, monopoly firms just set the price as
+high as possible.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>If demand is downward-sloping, <i>P</i> =
+<i>MR.</i></span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>If demand is downward-sloping, <i>P</i> = <i>ATC.</i></span></td></tr><tr
+valign='baseline'><td><div class='choice'>d.</div></td><td><span class='default'>If demand is
+downward-sloping, <i>P</i> &gt; <i>MR.</i></span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>Marginal revenue is greater than zero at all
+levels of output.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:25' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;25.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>In general, oligopolists find it easier to engage in collusive behavior when the
+industry is characterized by ________ behavior.</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>Cournot</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>Bertrand</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>noncooperative</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>independent</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>price-taking</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:26' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;26.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>A firm has hired the profit-maximizing quantity of labor when the wage
+is:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>less than the price of the product.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>greater than the average
+product.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>equal to the average product.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>equal to the <i>VMPL.</i></span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>less than the output
+price, but greater than the marginal factor cost.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:27' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;27.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>The Coase theorem states that in the presence of externalities, a market economy
+will:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>always reach an efficient solution.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>never reach an efficient
+solution.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>reach an efficient solution if transaction costs are sufficiently
+low.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>reach an efficient solution only in the case of government
+regulation.</span></td></tr><tr valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>reach an efficient solution only if the number of parties involved is
+large.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><b>Figure 74-4: Pollution and Efficiency<br></b><br><img width='344'
+height='226' align='bottom' alt="nar006-1.jpg" src="exercise_files/nar006-1.jpg" border='0'></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:28' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;28.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Figure 74-4: Pollution and Efficiency) Point ________ represents an efficient
+solution.</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'><i>A</i></span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'><i>B</i></span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'><i>E</i></span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'><i>F</i></span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'><i>D</i></span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:29' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;29.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>A copper mining operation discharges waste products into a river and causes
+higher costs and discomfort to downstream users of the water for which they are not compensated. In
+this case:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>too few of society&#039;s resources are being used to produce
+copper.</span></td></tr><tr valign='baseline'><td><div class='choice'>b.</div></td><td><span
+class='default'>too many of society&#039;s resources are being used to produce
+copper.</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>the optimal amount of society&#039;s resources are being used to produce
+copper.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>there is an external benefit to society from copper production.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>the market price of
+copper is too high.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:30' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;30.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>Which of the following transactions represents a transfer payment?</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>The government pays an employee by making a direct transfer to the employee&#039;s
+bank account.</span></td></tr><tr valign='baseline'><td><div class='choice'>b.</div></td><td><span
+class='default'>An army officer, paid by the government, transfers part of the money he receives back
+to the government to pay his taxes.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>c.</div></td><td><span class='default'>A senior citizen receives a Social Security
+payment.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>The Department of Defense purchases military vehicles from General
+Motors.</span></td></tr><tr valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>The government pays interest to those who have purchased Treasury
+bonds.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+</table>
+<br clear='all'>
+<br>
+<br>
+<table align='left' width='100%' cellpadding='0' cellspacing='0' border='0'>
+<tr>
+    <td bgcolor='#000000'>
+    <div style='font-size:1pt'>&nbsp;</div>
+    </td>
+</tr>
+<tr>
+    <td><input type='image' src='exercise_files/submit.gif' alt='Grade and Submit'>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href='#' onclick='Restart(); return false'><img
+	    src='exercise_files/restart.gif' border='0' alt='Start Over'></a>
+    </td>
+</tr>
+</table>
+</form>
+</body>
+</html>
