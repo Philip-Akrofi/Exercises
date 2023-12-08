@@ -1,0 +1,853 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<meta name='generator' content='ExamView HTML Generator 1.1.0'>
+	<meta name='robots' content='noindex,nofollow'>
+	<title>Homework on Production Function and Cost &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Due: 2023/11/20</title>
+	<style type='text/css'>
+		.spacer { line-height:.7em; }
+		.title { font-size:13pt; font-weight:bold; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		.qnumber { font-size:12pt; font-family:"Times New Roman", "Times", serif; color:#000000; text-align:right; }
+		.choice { font-size:12pt; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		.default { font-size:12pt; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		.qinfo { font-size:12pt; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		.points { font-size:8pt; font-family:"Times New Roman", "Times", serif; color:#000000; }
+		TD.pad { padding: 0pt 4pt 0pt 4pt; }
+		.font1 { font-family:"Times New Roman", "Times", serif; }
+		.font2 { font-family:"Times New Roman", "Times", serif; }
+		.font3 { font-family:"Times New Roman", "Times", serif; }
+	</style>
+<script type='text/javascript' language='JavaScript1.1'>
+<!--
+	// Copyright (c) 2000-2008 eInstruction Corp.
+	var listMap = '1111111111';
+	var qtypeMap = '2222222222';
+	var ansMap = new Array(10);
+	var ptsMap = new Array(10);
+	ansMap[0] = '42';
+	ptsMap[0] = 1;
+	ansMap[1] = '40';
+	ptsMap[1] = 1;
+	ansMap[2] = '47';
+	ptsMap[2] = 1;
+	ansMap[3] = '47';
+	ptsMap[3] = 1;
+	ansMap[4] = '46';
+	ptsMap[4] = 1;
+	ansMap[5] = '44';
+	ptsMap[5] = 1;
+	ansMap[6] = '45';
+	ptsMap[6] = 1;
+	ansMap[7] = '4c';
+	ptsMap[7] = 1;
+	ansMap[8] = '4b';
+	ptsMap[8] = 1;
+	ansMap[9] = '49';
+	ptsMap[9] = 1;
+	function HandleSubmit(f)
+	{
+		var	MAGIC = 840;
+		var	totalCorrect = 0;
+		var	totalPossible = 0;
+		var	numCorrect = 0;
+		var	numPossible = 0;
+		var	numBlank = 0;
+		var	index;
+		var	msg;
+		var	i;
+
+		f.student_name.value = StripSpaces(f.student_name.value);
+		f.student_id.value = StripSpaces(f.student_id.value);
+		f.student_email.value = StripSpaces(f.student_email.value);
+
+		FixMR(f);
+		FixMTF(f);
+		index = 0;
+		for (i=0; i < f.length; ++i) {
+			if (f.elements[i].name.indexOf(":") > 0) {
+				if (listMap.charAt(index) == "1") {
+					listIndex = f.elements[i].selectedIndex;
+					text = StripSpaces(f.elements[i].options[listIndex].value);
+				} else {
+					f.elements[i].value = StripSpaces(f.elements[i].value);
+					text = f.elements[i].value;
+				}
+
+				if (text.length == 0)
+					++numBlank;
+				++index;
+			}
+		}
+
+		if (f.student_name.value == "") {
+			alert("Student name cannot be blank.");
+			return(false);
+		}
+
+		if (numBlank > 0) {
+			if (numBlank == 1)
+				msg = "1 question";
+			else
+				msg = numBlank + " questions";
+			if (!confirm("You have not answered " + msg +
+				"  Are you sure you want to end the test?"))
+				return(false);
+		}
+
+		index = 0;
+		var scoreDetails = new Array();
+		for (i=0; i < f.length; ++i) {
+			if (f.elements[i].name.indexOf(":") > 0) {
+				if (listMap.charAt(index) == "1") {
+					listIndex = f.elements[i].selectedIndex;
+					text = f.elements[i].options[listIndex].value;
+				} else
+					text = f.elements[i].value;
+
+				numPossible = ptsMap[index] * MAGIC;
+				if (ansMap[index] == "")
+					scoreDetails[index] = "?--";
+				else {
+					var scoreResult = ScoreAnswer(index, text, numPossible);
+					numCorrect = scoreResult.numPoints;
+					scoreDetails[index] = (scoreResult.isCorrect) ? " " : "X";
+					scoreDetails[index] += (Math.round(numCorrect * 100 / MAGIC) / 100).toString();
+					totalCorrect += numCorrect;
+					totalPossible += numPossible;
+				}
+
+				scoreDetails[index] += "/" + (numPossible / MAGIC);
+				++index;
+			}
+		}
+
+		f.score_details.value = scoreDetails.join("|");
+		f.score_correct.value = Math.round(totalCorrect * 100 / MAGIC) / 100;
+		f.score_possible.value = Math.round(totalPossible * 100 / MAGIC) / 100;
+		if (totalPossible > 0)
+			f.score_percent.value = Math.round(100.0 * totalCorrect / totalPossible);
+		else
+			f.score_percent.value = 0;
+
+		return(true);
+	}
+
+	function TranslateAnswer(s, answerIndex)
+	{
+		var	value;
+		var	newString;
+		var	code;
+		var	i;
+
+		value = (answerIndex % 31) + 1;
+		newString = "";
+		for (i=0; i < s.length; i += 2) {
+			code = parseInt(s.substring(i, i + 2), 16);
+			newString += String.fromCharCode(code ^ value);
+		}
+
+		return(newString);
+	}
+
+	function ScoreAnswer(answerIndex, responseText, pointsPossible)
+	{
+		var answerText = TranslateAnswer(ansMap[answerIndex], answerIndex);
+		var qtype = qtypeMap.charAt(answerIndex);
+		var nrExactMatch = false;
+		var result = new Array();
+
+		result.numPoints = 0;
+		result.isCorrect = false;
+
+		if (qtype == "3" && answerText.substring(0, 2) == "p:") {
+			answerText = answerText.substr(2);
+			if (responseText.toUpperCase() == answerText.toUpperCase())
+				result.isCorrect = true;
+			else
+				result.numPoints = MultiResponseCompare(responseText, answerText, pointsPossible);
+		} else if (qtype == "6") {
+			if (answerText.substring(0, 2) == "==") {
+				answerText = answerText.substr(2);
+				nrExactMatch = true;
+			}
+			if (NumericCompare(responseText, answerText, nrExactMatch))
+				result.isCorrect = true;
+		} else if (qtype == "7") {
+			if (CompletionCompare(responseText, answerText))
+				result.isCorrect = true;
+		} else if (responseText.toUpperCase() == answerText.toUpperCase())
+			result.isCorrect = true;
+
+		if (result.isCorrect)
+			result.numPoints = pointsPossible;
+
+		return(result);
+	}
+
+	function StripSpaces(s)
+	{
+		var	len;
+		var	i;
+
+		len = s.length;
+		for (i=len - 1; i >= 0 && s.charAt(i) == " "; --i)
+			len = i;
+
+		if (len == 0)
+			s = "";
+		else if (len != s.length)
+			s = s.substring(0, len);
+
+		return(s);
+	}
+
+	function MultiResponseCompare(responseText, answerText, pointsPossible)
+	{
+	}
+
+	function NumericCompare(response, answer, exactMatch)
+	{
+	}
+
+
+	function CompletionCompare(responseText, answerText)
+	{
+		return(false);
+	}
+
+    function StripLeadingSpaces(s)
+	{
+		var	len;
+		var	i = 0;
+		var index = -1;
+
+		len = s.length;
+		while(i < len && s.charAt(i) == " ")
+		{
+			index = ++i;			
+	    }
+
+		if (len == 0)
+			s = "";
+		else if (index > -1)
+			s = s.substring(index, len);
+
+		return(s);
+	}
+	
+	function FixMTF(f)
+	{
+	}
+
+	function FixMR(f)
+	{
+	}
+
+	function AllowReset()
+	{
+		return(window.confirm("Do you want to clear all of your answers?"));
+	}
+
+	function Restart()
+	{
+		if (AllowReset()) {
+			document.TestForm.onreset = function() { };
+			document.TestForm.reset();
+			document.TestForm.onreset = function() { AllowReset(); };
+		}
+	}
+// -->
+</script>
+</head>
+<body onResize='if(document.layers && navigator.appVersion.indexOf("Win") < 0){history.go(0);}'
+bgcolor='#FFFFFF' style='background-image:url(homework_on_product_files/header.gif); background-repeat:no-repeat'>
+<noscript>
+	<h3><font color='#FF0000'>Javascript not enabled</font></h3>
+</noscript>
+<script type='text/javascript' language='JavaScript'>
+<!--
+if (navigator.appName.indexOf("Netscape") >= 0) {
+	if (parseInt(navigator.appVersion.charAt(0)) < 4)
+		alert("This document requires Netscape Navigator version 4.0 or later.");
+} else if (navigator.appName.indexOf("Explorer") >= 0) {
+	if (parseInt(navigator.appVersion.charAt(0)) < 4)
+		alert("This document requires Internet Explorer version 4.0 or later.");
+}
+// -->
+</script>
+<form name='TestForm' action='http://score.examview.com/cgi-bin/results.cgi' method='POST'
+	onSubmit='return(HandleSubmit(this))' onReset='return(AllowReset())'>
+<input type='hidden' name='product_version' value='7.50.1051'>
+<input type='hidden' name='instructor_name' value='Philip'>
+<input type='hidden' name='instructor_formalname' value='Dr. Atitianti'>
+<input type='hidden' name='instructor_email' value='p.akrofi@outlook.com'>
+<input type='hidden' name='instructor_org' value='D'>
+<input type='hidden' name='instructor_city' value='d'>
+<input type='hidden' name='instructor_state' value='D'>
+<input type='hidden' name='test_name' value='Homework on Production Function and Cost                       Due: 2023/11/20'>
+<input type='hidden' name='other_label' value='Other'>
+<input type='hidden' name='test_mixed_questions' value='0'>
+<input type='hidden' name='score_correct' value='0'>
+<input type='hidden' name='score_possible' value='0'>
+<input type='hidden' name='score_percent' value='0'>
+<input type='hidden' name='score_subjective' value='0'>
+<input type='hidden' name='score_details' value=''>
+<div class='spacer'>&nbsp;</div>
+<div class='default'>
+	<div style='margin-left:1em'>
+	<b>Name:</b>&nbsp;<input type='text' name='student_name' size='30'> &nbsp;&nbsp;
+	<b>ID:</b>&nbsp;<input type='text' name='student_id' size='12'><br>
+	<div class='spacer'>&nbsp;</div>
+	<b>Email:</b>&nbsp;<input type='text' name='student_email' size='45'><br><br>
+	</div>
+</div>
+<div class='title'>Homework on Production Function and Cost &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Due: 2023/11/20</div>
+
+<table align='left' width='100%' border='0' cellpadding='0' cellspacing='0'>
+<tr valign='top'>
+	<td colspan='3'><br>
+<div class='default'><b>Multiple Choice</b><span style='font-size:10pt'><br></span><i>Identify the
+choice that best completes the statement or answers the question.</i></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:1' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;1.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>A curve that shows the quantities of output that can be obtained from different
+quantities of a variable input, assuming other inputs are fixed, is called the ________ curve.</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>total input</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>marginal input</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span class='default'>total
+product</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>average total quantity</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>total cost</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:2' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;2.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>A farm can produce 1,000 bushels of wheat per year with two workers and 1,300
+bushels of wheat per year with three workers. The marginal product of the third worker is:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>100 bushels.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>300 bushels.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span class='default'>1,300
+bushels.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>2,300 bushels.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>150 bushels.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:3' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;3.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>At 47 units of labor, a firm finds that average product of labor equals 39.6 and
+marginal product of labor equals 32.9. We can conclude that the average product curve at 47 units of
+labor is:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>upward-sloping.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>horizontal.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>vertical.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>downward-sloping.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>maximized.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><div style='font-size:2pt'></div><table cellpadding='0' cellspacing='0'
+width='37%' border='0'><tr valign='top'><td class='pad' style=' border-left:0.8pt solid #000000;
+border-top:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'><b>Labor<br>per Day</b></div></td><td class='pad' style='
+border-top:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'><b>Total Products<br>(units per
+period)</b></div></td></tr><tr valign='top'><td class='pad' style=' border-left:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>0</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>0</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>1</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>10</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>2</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>30</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>3</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>70</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>4</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>90</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>5</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>100</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>6</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>107</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>7</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>110</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>8</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>105</div></td></tr><tr
+valign='top'><td colspan='2' class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt
+solid #000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'><b>Table 54-2:
+Total Product and<br>Marginal Product</b></div></td></tr><tr height='0' style='border:none'><td
+width='41%'></td><td width='59%'></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:4' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;4.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Table 54-2: Total Product and Marginal Product) The marginal product of the
+second worker is:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>10.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>15.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>20.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>30.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>0.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><b>Figure 54-1: Total Product<br></b><br><img width='356' height='216'
+align='bottom' alt="nar002-1.jpg" src="homework_on_product_files/nar002-1.jpg" border='0'></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:5' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;5.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Figure 54-1: Total Product) Between points <i>A</i> and <i>B</i> the marginal
+product of labor is:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>increasing.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>zero.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>falling.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>infinite.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>constant.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:6' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;6.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Figure 54-1: Total Product) Hiring <i>L</i><sub>2</sub> units of labor results
+in total product attaining a ________and the marginal product of labor ________.</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>minimum; being equal to zero</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>maximum; being equal to
+zero</span></td></tr><tr valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>maximum; being positive</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>minimum; falling, but still being
+positive</span></td></tr><tr valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>maximum; being negative</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><div style='font-size:2pt'></div><table cellpadding='0' cellspacing='0'
+width='44%' border='0'><tr valign='top'><td valign='bottom' class='pad' style=' border-left:0.8pt
+solid #000000; border-top:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt
+solid #000000;'><div style='text-align:center'><b>Quantity<br>of Labor<br>(workers)</b></div></td><td
+valign='bottom' class='pad' style=' border-top:0.8pt solid #000000; border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'><b>Quantity of<br>Cabinets
+Q</b></div></td><td valign='bottom' class='pad' style=' border-top:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'><b>Marginal Product<br>of Labor<br>(cabinets per
+worker)</b></div></td></tr><tr valign='top'><td class='pad' style=' border-left:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>0</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>0</div></td><td class='pad'
+style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'>&nbsp;</td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>1</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>5</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>5</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>2</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>11</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>6</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>3</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>16</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>5</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>4</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>20</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>4</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>5</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>23</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>3</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>6</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>25</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>2</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>7</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>26</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>1</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>8</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>25</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>-1</div></td></tr><tr
+valign='top'><td colspan='3' class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt
+solid #000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'><b>Table 54-3:
+Production of Cabinets</b></div></td></tr><tr height='0' style='border:none'><td width='30%'></td><td
+width='36%'></td><td width='34%'></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:7' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;7.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Table 54-3: Production of Cabinets) The table shows how many cabinets your firm
+can make with a variable quantity of labor hired. After which worker does the firm first begin to
+experience diminishing returns to labor?</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>first</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>second</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>third</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>fourth</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>fifth</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><b>Figure 54-2: Change in Total Product<br></b><br><img width='265' height='202'
+align='bottom' alt="nar004-1.jpg" src="homework_on_product_files/nar004-1.jpg" border='0'></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:8' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;8.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Figure 54-2: Change in Total Product) The figure shows a production function
+changing from <i>TP</i><sub>1</sub> to <i>TP</i><sub>2</sub>. Which of the following choices is a
+likely cause of this shift?</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>Workers in the firm are less productive on average.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>b.</div></td><td><span class='default'>The firm employed
+more of a variable input in the short run.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>c.</div></td><td><span class='default'>The firm has suffered a decrease in available
+technology.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>The firm employed more of a fixed input in the long run.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span class='default'>The price of
+employing the variable input increased.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><div style='font-size:2pt'></div><table cellpadding='0' cellspacing='0'
+width='50%' border='0'><tr valign='top'><td valign='bottom' class='pad' style=' border-left:0.8pt
+solid #000000; border-top:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt
+solid #000000;'><div style='text-align:center'><b>Quantity<br>of Land<br>(in
+hectares)</b></div></td><td valign='bottom' class='pad' style=' border-top:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'><b>Quantity<br>of Labor</b></div></td><td valign='bottom' class='pad'
+style=' border-top:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'><b>Total<br>Product<br>(apples
+picked)</b></div></td></tr><tr valign='top'><td class='pad' style=' border-left:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>10</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>0</div></td><td class='pad'
+style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>0</div></td></tr><tr valign='top'><td class='pad' style=' border-left:0.8pt
+solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>10</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>1</div></td><td class='pad'
+style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>8</div></td></tr><tr valign='top'><td class='pad' style=' border-left:0.8pt
+solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>10</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>2</div></td><td class='pad'
+style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>15</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>10</div></td><td class='pad' style=' border-right:0.8pt
+solid #000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>3</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>21</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>10</div></td><td class='pad' style=' border-right:0.8pt
+solid #000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>4</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>26</div></td></tr><tr valign='top'><td colspan='3' class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'><b>Table 54-5: Tonya&#039;s Production<br>Function for
+Apples</b></div></td></tr><tr height='0' style='border:none'><td width='32%'></td><td
+width='28%'></td><td width='40%'></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:9' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;9.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Table 54-5: Tonya&#8217;s Production Function for Apples) The information
+provided tells you that Tonya is operating:</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>in the long run.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>in the short run.</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span class='default'>in a very expensive
+location.</span></td></tr><tr valign='baseline'><td><div class='choice'>d.</div></td><td><span
+class='default'>at a loss.</span></td></tr><tr valign='baseline'><td><div
+class='choice'>e.</div></td><td><span class='default'>with maximum
+efficiency.</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='top'>
+	<td></td>
+	<td></td>
+	<td>
+<div class='spacer'>&nbsp;</div>
+<div class='default'><div style='font-size:2pt'></div><table cellpadding='0' cellspacing='0'
+width='41%' border='0'><tr valign='top'><td colspan='2' class='pad' style=' border-left:0.8pt solid
+#000000; border-top:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>The table describes Bonnie&#039;s production function for
+Good Z. Assume labor is the only variable input that Bonnie uses to produce Good
+Z.<br></div></td></tr><tr valign='top'><td class='pad' style=' border-left:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'><b>Quantity of<br>Labors Hired<br>(workers)</b></div></td><td class='pad'
+style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'><b>Quantity of<br>Good Z Produced<br>(per time
+period)</b></div></td></tr><tr valign='top'><td class='pad' style=' border-left:0.8pt solid #000000;
+border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>0</div></td><td class='pad' style=' border-right:0.8pt solid #000000;
+border-bottom:0.8pt solid #000000;'><div style='text-align:center'>0</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>1</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>75</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>2</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>150</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>3</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>250</div></td></tr><tr valign='top'><td class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'>4</div></td><td class='pad' style=' border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>325</div></td></tr><tr
+valign='top'><td class='pad' style=' border-left:0.8pt solid #000000; border-right:0.8pt solid
+#000000; border-bottom:0.8pt solid #000000;'><div style='text-align:center'>5</div></td><td
+class='pad' style=' border-right:0.8pt solid #000000; border-bottom:0.8pt solid #000000;'><div
+style='text-align:center'>375</div></td></tr><tr valign='top'><td colspan='2' class='pad' style='
+border-left:0.8pt solid #000000; border-right:0.8pt solid #000000; border-bottom:0.8pt solid
+#000000;'><div style='text-align:center'><b>Table 54-6: Bonnie&#039;s Production<br>Function for Good
+Z</b></div></td></tr><tr height='0' style='border:none'><td width='47%'></td><td
+width='53%'></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+<tr valign='baseline'>
+	<td>
+		<select name='MC:10' align='top' onmousewheel='return(false);'>
+			<option value=' '> 
+			<option value='A'>A
+			<option value='B'>B
+			<option value='C'>C
+			<option value='D'>D
+			<option value='E'>E
+		</select>
+	</td>
+	<td>
+		<p class='qnumber'>&nbsp;10.&nbsp;</p>
+	</td>
+	<td width='100%'>
+<div class='default'>(Table 54-6: Bonnie&#039;s Production Function for Good Z) The marginal product
+of labor from hiring the second worker is ________ units of Good Z.</div>
+<div class='default'><table cellpadding='0' cellspacing='0' width='95%' border='0'><tr
+valign='baseline'><td width='4%'><div class='choice'>a.</div></td><td width='96%'><span
+class='default'>150</span></td></tr><tr valign='baseline'><td><div
+class='choice'>b.</div></td><td><span class='default'>225</span></td></tr><tr
+valign='baseline'><td><div class='choice'>c.</div></td><td><span
+class='default'>75</span></td></tr><tr valign='baseline'><td><div
+class='choice'>d.</div></td><td><span class='default'>250</span></td></tr><tr
+valign='baseline'><td><div class='choice'>e.</div></td><td><span
+class='default'>100</span></td></tr></table></div>
+<div class='spacer'>&nbsp;</div>
+	</td>
+</tr>
+</table>
+<br clear='all'>
+<br>
+<br>
+<table align='left' width='100%' cellpadding='0' cellspacing='0' border='0'>
+<tr>
+    <td bgcolor='#000000'>
+    <div style='font-size:1pt'>&nbsp;</div>
+    </td>
+</tr>
+<tr>
+    <td><input type='image' src='homework_on_product_files/submit.gif' alt='Grade and Submit'>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href='#' onclick='Restart(); return false'><img
+	    src='homework_on_product_files/restart.gif' border='0' alt='Start Over'></a>
+    </td>
+</tr>
+</table>
+</form>
+</body>
+</html>
